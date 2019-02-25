@@ -1,7 +1,5 @@
 package PageObject;
 
-import java.util.concurrent.TimeUnit;
-
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
@@ -43,17 +41,27 @@ public class LoginPage extends ObjectPage {
 	}
 	
 	
-	public void loginApplication(WebDriver webdriver,String userName,String password) {
+	public void loginApplication(WebDriver webdriver,String userName,String password,String URL) throws InterruptedException {
 		
+	   webdriver.get(URL);	
 	   userNameTextBox().sendKeys(userName);
 	   nextButton().click();	  	    	
-	   webdriver.manage().timeouts().implicitlyWait(5,TimeUnit.SECONDS);
+	   Thread.sleep(3000);
 	   passwordTextBox().sendKeys(password);
 	   signInButton().click();
 	   signInButton().click();
-		  
+	   Thread.sleep(5000);  
 	   
 	}
 	
-	
+	public void InvalidloginApplication(WebDriver webdriver,String userName,String password,String URL) throws InterruptedException {
+		
+		   webdriver.get(URL);	
+		   userNameTextBox().sendKeys("test123@nettium.net");
+		   nextButton().click();
+		   Thread.sleep(3000);
+		   passwordTextBox().sendKeys(password);
+		   signInButton().click();
+		    	   
+		}
 }

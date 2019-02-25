@@ -1,5 +1,6 @@
 package Automation;
 
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.concurrent.TimeUnit;
@@ -9,9 +10,15 @@ import org.apache.poi.xssf.usermodel.XSSFCell;
 import org.apache.poi.xssf.usermodel.XSSFRow;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import org.openqa.selenium.OutputType;
+import org.openqa.selenium.TakesScreenshot;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
-import org.testng.annotations.BeforeClass;
+import org.openqa.selenium.chrome.ChromeOptions;
+import org.testng.ITestResult;
+import org.testng.annotations.AfterMethod;
+
+import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.DataProvider;
 
 public class FunctionalTest {
@@ -25,16 +32,37 @@ public class FunctionalTest {
 	    public  String Res;  
 	    public int DataSet=-1;
 	
-	@BeforeClass
+	@BeforeMethod
 	public void setup()
 	{
+		ChromeOptions options = new ChromeOptions();
+		options.addArguments("--disable-notifications");
 		System.setProperty("webdriver.chrome.driver","C:\\Users\\puttaparthi\\Desktop\\chromedriver.exe");
-		webdriver=new ChromeDriver();
+		webdriver=new ChromeDriver(options);
 		webdriver.manage().timeouts().implicitlyWait(5,TimeUnit.SECONDS);
 		webdriver.manage().window().maximize();
 		
 	}
 	
+	@AfterMethod
+	public void screenCapture(ITestResult testresult) throws IOException
+	{
+	if(ITestResult.FAILURE==testresult.getStatus()) {
+	// Call method to capture screenshot
+	String methodname = testresult.getName(); 
+	File scrFile = ((TakesScreenshot)webdriver).getScreenshotAs(OutputType.FILE);
+
+
+	String location = "C:\\Users\\puttaparthi\\Desktop\\TESTNG_ScreenShots\\";
+
+
+	org.openqa.selenium.io.FileHandler.copy(scrFile,new File(location + methodname + "_" + ".png" ));
+	
+
+	}	
+	else
+	System.out.println("Test is passed");
+	}
 	
 	@DataProvider
 	public static Object[][] InputData() throws IOException
